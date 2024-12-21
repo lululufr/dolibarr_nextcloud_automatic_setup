@@ -154,27 +154,18 @@ chown -R www-data /var/dolidata
 
 echo '
 <?php
-$dolibarr_main_url_root="/var/www/dolibarr/htdocs";
-$dolibarr_main_document_root="/var/www/dolibarr/documents";
-$dolibarr_main_data_root="/var/dolidata";
-$dolibarr_main_db_host="localhost";
-$dolibarr_main_db_port="3306";
-$dolibarr_main_db_name="'${DOLI_USER}'";
-$dolibarr_main_db_user="'${DOLI_USER}'";
-$dolibarr_main_db_pass="'${DOLI_PASS}'";
-$dolibarr_main_db_type="mysql";
-$dolibarr_main_db_character_set='utf8';
-$dolibarr_main_db_collation='utf8_unicode_ci';
-$dolibarr_main_db_readonly=0;
-$dolibarr_main_instance_unique_id='84b5bc91f83b56e458db71e0adac2b62';
-$dolibarr_main_dolcrypt_key='';
-$dolibarr_main_authentication='dolibarr';
-$dolibarr_main_force_https='0';
-$dolibarr_main_prod='1';
-$dolibarr_main_restrict_os_commands='mariadb-dump, mariadb, mysqldump, mysql, pg_dump, pg_restore, clamdscan, clamdscan.exe';
-$dolibarr_main_restrict_ip='';
-$dolibarr_nocsrfcheck='0';
-
+$dolibarr_main_url_root = "http://doli.mc.local";
+$dolibarr_main_document_root = "/var/www/dolibarr/htdocs";
+$dolibarr_main_data_root = "/var/dolidata";
+$dolibarr_main_db_host = "localhost";
+$dolibarr_main_db_port = "3306";
+$dolibarr_main_db_name = "'${DOLI_DB}'";
+$dolibarr_main_db_user = "'${DOLI_USER}'";
+$dolibarr_main_db_pass = "'${DOLI_PASS}'";
+$dolibarr_main_db_type = 'mysqli';
+$dolibarr_main_prod = '1';
+$dolibarr_main_use_javascript_ajax = '1';
+?>
 '
 
 systemctl restart apache2.service
