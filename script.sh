@@ -49,7 +49,7 @@ systemctl restart networking
 
 #dependances
 apt update
-apt install -y zip unzip apache2 php mariadb-server ssh php8.2-{zip,mysql,dom,XMLWriter,XMLReader,xml,mbstring,GD,SimpleXML,cURL,intl,IMAP}
+apt install -y zip unzip apache2 curl php mariadb-server ssh php8.2-{zip,mysql,dom,XMLWriter,XMLReader,xml,mbstring,GD,SimpleXML,cURL,intl,IMAP}
 
 #SSH
 #clef publique
@@ -152,27 +152,29 @@ chown -R www-data /var/www/nextcloud/
 chown -R www-data /var/www/dolibarr/
 chown -R www-data /var/dolidata
 
-######## to fix
-### php
-## step 1
-#testpost=ok
-#action=set
-#main_dir=/var/www/dolibarr/htdocs
-#main_data=/var/www/dolibarr/htdocs/documents
-#main_url=http://doli.mc.local
-#db_name=${DOLI_DB}
-#db_type=mysqli
-#db_host=localhost
-#db_port
-#db_prefix=llx_
-#db_user=${DOLI_USER}
-#db_pass=${DOLI_PASS}
-#select_lang=en_US
+echo '
+<?php
+$dolibarr_main_url_root="/var/www/dolibarr/htdocs";
+$dolibarr_main_document_root="/var/www/dolibarr/documents";
+$dolibarr_main_data_root="/var/dolidata";
+$dolibarr_main_db_host="localhost";
+$dolibarr_main_db_port="3306";
+$dolibarr_main_db_name="'${DOLI_USER}'";
+$dolibarr_main_db_user="'${DOLI_USER}'";
+$dolibarr_main_db_pass="'${DOLI_PASS}'";
+$dolibarr_main_db_type="mysql";
+$dolibarr_main_db_character_set='utf8';
+$dolibarr_main_db_collation='utf8_unicode_ci';
+$dolibarr_main_db_readonly=0;
+$dolibarr_main_instance_unique_id='84b5bc91f83b56e458db71e0adac2b62';
+$dolibarr_main_dolcrypt_key='';
+$dolibarr_main_authentication='dolibarr';
+$dolibarr_main_force_https='0';
+$dolibarr_main_prod='1';
+$dolibarr_main_restrict_os_commands='mariadb-dump, mariadb, mysqldump, mysql, pg_dump, pg_restore, clamdscan, clamdscan.exe';
+$dolibarr_main_restrict_ip='';
+$dolibarr_nocsrfcheck='0';
 
-## step 2
-#testpost=ok
-#action=set
-
-# Dernier restart
+'
 
 systemctl restart apache2.service
