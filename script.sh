@@ -152,20 +152,35 @@ chown -R www-data /var/www/nextcloud/
 chown -R www-data /var/www/dolibarr/
 chown -R www-data /var/dolidata
 
-echo '
+echo
+cat <<EOF >/var/www/dolibarr/htdocs/conf/conf.php
 <?php
-$dolibarr_main_url_root = "http://doli.mc.local";
-$dolibarr_main_document_root = "/var/www/dolibarr/htdocs";
-$dolibarr_main_data_root = "/var/dolidata";
-$dolibarr_main_db_host = "localhost";
-$dolibarr_main_db_port = "3306";
-$dolibarr_main_db_name = "'${DOLI_DB}'";
-$dolibarr_main_db_user = "'${DOLI_USER}'";
-$dolibarr_main_db_pass = "'${DOLI_PASS}'";
-$dolibarr_main_db_type = 'mysqli';
-$dolibarr_main_prod = '1';
-$dolibarr_main_use_javascript_ajax = '1';
+\$dolibarr_main_url_root = 'http://doli.mc.local';
+\$dolibarr_main_document_root = '/var/www/dolibarr/htdocs';
+\$dolibarr_main_data_root = '/var/dolidata';
+\$dolibarr_main_db_host = 'localhost';
+\$dolibarr_main_db_port = '3306';
+\$dolibarr_main_db_name = '${DOLI_DB}';
+\$dolibarr_main_db_user = '${DOLI_USER}';
+\$dolibarr_main_db_pass = '${DOLI_PASS}';
+\$dolibarr_main_db_type = 'mysqli';
+\$dolibarr_main_prod = '1';
+\$dolibarr_main_use_javascript_ajax = '1';
 ?>
-'
+EOF
+
+#retirer les commentaires des fichiers de conf puis les éxécuter pour entrer en BDD
+for file in /var/www/dolibarr/htdocs/install/mysql/tables/*.sql; do
+  sed -i 's/--\([^ ]\)/-- \1/g' "$file" 2> /dev/null
+done
+
+for file in /var/www/dolibarr/htdocs/install/mysql/tables/*.sql; do
+  mysql -u ${DOLI_USER} -p${DOLI_PASS} ${DOLI_DB} <"$file"
+done
+
+#Créer le admin user
+mysql -u ${DOLI_USER} -p${DOLI_PASS} dolibarr <<EOF
+INSERT INTO llx_user (login, pass, pass_crypted, statut, admin, datec, tms) VALUES ('${DOLI_USER}','${DOLI_USER}', '${DOLI_PASS}', 1, 1, NOW(), NOW());
+EOF
 
 systemctl restart apache2.service
