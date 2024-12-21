@@ -171,11 +171,11 @@ EOF
 
 #retirer les commentaires des fichiers de conf puis les éxécuter pour entrer en BDD
 for file in /var/www/dolibarr/htdocs/install/mysql/tables/*.sql; do
-  sed -i 's/--\([^ ]\)/-- \1/g' "$file" 2> /dev/null
+  sed -i 's/--\([^ ]\)/-- \1/g' "$file" 2>/dev/null
 done
 
 for file in /var/www/dolibarr/htdocs/install/mysql/tables/*.sql; do
-  mysql -u ${DOLI_USER} -p${DOLI_PASS} ${DOLI_DB} <"$file"
+  mysql -u ${DOLI_USER} -p${DOLI_PASS} ${DOLI_DB} <"$file" 2>/dev/null
 done
 
 #Créer le admin user
